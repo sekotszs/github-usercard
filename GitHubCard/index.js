@@ -2,17 +2,26 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
-
+const gitCardParent = document.querySelector('div.cards');
 axios.get('https://api.github.com/users/sekotszs')
 .then(response => {
   console.log(response);
-  response.data.message.forEach(crdSrc =>{
-    entryPoint.append(myCard(crdSrc))
-  })
+  gitCardParent.append(gitCard(response.data))
 })
 .catch(error => {
   console.log("the data was not returned", error)
 })
+
+//new people
+axios.get('https://api.github.com/users/sekotszs/followers')
+.then(response => {
+  console.log(response);
+response.data.forEach( person => gitCardParent.append(gitCard(person)))
+})
+.catch(error => {
+  console.log("the data was not returned", error)
+})
+
 
 
 /* Step 2: Inspect and study the data coming back, this is YOUR 
@@ -62,62 +71,64 @@ function gitCard (object){
   divOne.classList.add('card');
 
 //IMAGE
-  const cardImg = document.createElement('img');
-  cardImg.setAttribute = object.avatar_url;
-  divOne.appendChild(cardImg);
+const cardImg = document.createElement('img');
+cardImg.setAttribute('src',object.avatar_url) 
+divOne.appendChild(cardImg);
+
 
   //DIV CARDINFO
   const divTwo = document.createElement('div');
   divTwo.classList.add('card-info');
   divOne.appendChild(divTwo);
 
+  
   //H3 Name
   const cardH = document.createElement('h3');
   cardH.classList.add('name');
-  cardH.textContent = object.name;
-  divOne.appendChild(cardH);
+  cardH.textContent = `${object.name}`;
+  divTwo.appendChild(cardH);
 
   //PARAGRAPH ONE Login
   const pOne = document.createElement('p');
   pOne.classList.add('username');
-  pOne.classList = object.login;
-  divOne.appendChild(pOne);
+  pOne.textContent = `${object.login}`;
+  divTwo.appendChild(pOne);
 
   //PARAGRAPH TWO location
   const pTwo = document.createElement('p');
-  pTwo.textContent = object.location;
-  divOne.appendChild(pTwo);
+  pTwo.textContent = `Location:
+   ${object.location}`;
+  divTwo.appendChild(pTwo);
 
   //PARAGRAPH THREE profile
   const pThree = document.createElement('p');
-  pThree.textContent = object.url;
-  divOne.appendChild(pThree);
+  divTwo.appendChild(pThree);
 
   //HREF
   const oneA = document.createElement('a');
-  oneA.textContent = object.url;
+  oneA.setAttribute('href',object.html_url);
+  oneA.textContent = `Profile`;
   pThree.appendChild(oneA);
 
   //PARAGRAPH FOUR followers
   const pFour = document.createElement('p');
-  pFour.textContent = object.followers;
-  divOne.appendChild(pFour);
+  pFour.textContent = `Followers: ${object.followers}`
+  divTwo.appendChild(pFour);
 
   //PARAGRAPH FIVE follwoing
   const pFive = document.createElement('p');
-  pFive.textContent = object.following;
-  divOne.appendChild(pFive);
+  pFive.textContent =`Following: ${object.following}`
+  divTwo.appendChild(pFive);
 
   //PARAGRAPH SIX bio
   const pSix = document.createElement('p');
-  pSix.textContent = object.bio;
-  divOne.appendChild(pSix);
-        
-        
-        
+  pSix.textContent = `Bio: ${object.bio}`;
+  divTwo.appendChild(pSix);
+    
         
   return divOne;          
 }
+
 
 
 /* List of LS Instructors Github username's: 
